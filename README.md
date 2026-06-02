@@ -114,7 +114,7 @@ Per-import shader target: **openPBR / StingrayPBS / Arnold / Maya Phong**.
 ## Install
 
 Maya GLB I/O is a normal Maya plug-in package (`scripts/` + `plug-ins/`). Pick whichever of the
-three methods below you find easiest — they all end with a **glTF 2.0** menu in Maya's main menu bar.
+three methods below you find easiest — they all end with a **GLB I/O** menu in Maya's main menu bar.
 
 > Wherever you put the unzipped folder, **keep it there** — methods (a) and (b) point Maya at that
 > location rather than copying the code. Don't delete it after installing.
@@ -131,7 +131,7 @@ three methods below you find easiest — they all end with a **glTF 2.0** menu i
 5. With Maya's window visible, **drag `install.py`** out of the file browser and **drop it into the
    Maya viewport** (the big 3D area).
 6. A confirmation dialog appears saying the plug-in is installed. Click **OK**.
-7. Look at the top menu bar in Maya — a new **glTF 2.0** menu is there. You're done.
+7. Look at the top menu bar in Maya — a new **GLB I/O** menu is there. You're done.
 
 The installer writes a small Maya *module* file that points at this folder, then loads the plug-in.
 Next time you launch Maya the plug-in loads automatically — you only drag-and-drop once.
@@ -150,7 +150,7 @@ If you prefer to wire it up yourself, or the drag-and-drop method is blocked by 
 3. Restart Maya.
 4. Open **Windows → Settings/Preferences → Plug-in Manager**, find **`maya_glb_io.py`**, and tick
    **Loaded** (and **Auto load** if you want it every session).
-5. The **glTF 2.0** menu appears.
+5. The **GLB I/O** menu appears.
 
 ### Method (c) — Plug-in Manager only
 
@@ -161,31 +161,31 @@ If you just want to try it without touching modules or environment variables:
 3. Click **Browse**, navigate into the unzipped folder's **`plug-ins`** subfolder, and pick
    **`maya_glb_io.py`**.
 4. Tick **Loaded**. The plug-in adds its own `scripts/` folder to Maya's Python path automatically,
-   then installs the **glTF 2.0** menu.
+   then installs the **GLB I/O** menu.
    - Tip: tick **Auto load** too so it comes back next session.
 
 ---
 
 ## Usage
 
-All commands live under the **glTF 2.0** menu (and `.glb` / `.gltf` also show up in Maya's native
+All commands live under the **GLB I/O** menu (and `.glb` / `.gltf` also show up in Maya's native
 **File → Import** dialog).
 
-- **Import a model** — *glTF 2.0 → Import .glb / .gltf...* Pick a file and it imports using your
+- **Import a model** — *GLB I/O → Import .glb / .gltf...* Pick a file and it imports using your
   saved Import Preferences. For per-file option tweaks (shader target, scale, drop-to-floor, etc.)
   use Maya's native **File → Import** instead — it shows the full options panel.
-- **Batch import** — *glTF 2.0 → Batch Import...* to import several files at once.
+- **Batch import** — *GLB I/O → Batch Import...* to import several files at once.
 - **Switch material variants** — after importing a model that uses `KHR_materials_variants`, select
   the object and change the **Material Variant** dropdown in the **Channel Box / Attribute Editor**.
   The scene re-skins instantly. After reopening a saved scene, run
-  *glTF 2.0 → Material Variants: Find/Arm Switch* once to re-arm the live dropdown.
+  *GLB I/O → Material Variants: Find/Arm Switch* once to re-arm the live dropdown.
 - **Draco (compressed) files** — these import automatically; the first time, the decoder is
   downloaded for you. To get it out of the way ahead of time, run
-  *glTF 2.0 → Install Draco Decoder (one-time)...*
-- **Export selection** — select your objects, then *glTF 2.0 → Export Selection to glTF/GLB...*
+  *GLB I/O → Install Draco Decoder (one-time)...*
+- **Export selection** — select your objects, then *GLB I/O → Export Selection to glTF/GLB...*
   Choose `.glb` or `.gltf` in the save dialog.
-- **Export the whole scene** — *glTF 2.0 → Export Scene to glTF/GLB...*
-- **Preferences** — *glTF 2.0 → Import Preferences...* and *Export Preferences...* set the defaults
+- **Export the whole scene** — *GLB I/O → Export Scene to glTF/GLB...*
+- **Preferences** — *GLB I/O → Import Preferences...* and *Export Preferences...* set the defaults
   used by the quick Import/Export menu items.
 
 ---

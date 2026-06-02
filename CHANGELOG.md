@@ -44,7 +44,7 @@ Autodesk Maya 2022+.
 - Faithful round-trip with the importer.
 
 ### Added — UX / install
-- Top-level **glTF 2.0** menu and File > Import file translator with an options panel.
+- Top-level **GLB I/O** menu and File > Import file translator with an options panel.
 - Import and Export Preferences windows; one-time Draco-decoder installer.
 - Drag-and-drop `install.py`, a Maya module `.mod`, and Plug-in Manager loading.
 

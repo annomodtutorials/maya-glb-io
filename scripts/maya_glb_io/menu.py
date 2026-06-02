@@ -1,11 +1,11 @@
-"""Top-level 'glTF 2.0' menu installed in Maya's main window."""
+"""Top-level 'GLB I/O' menu installed in Maya's main window."""
 from __future__ import annotations
 
 from maya import cmds, mel
 
 
 MENU_ID = "glbIO_glTFMenu"
-MENU_LABEL = "glTF 2.0"
+MENU_LABEL = "GLB I/O"
 
 
 def install():

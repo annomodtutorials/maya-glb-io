@@ -2,7 +2,7 @@
 
 Loaded by Maya's Plug-in Manager. Registers an MPxFileTranslator so
 .glb / .gltf files appear in File > Import (with a full options panel
-in File Type Specific Options), and installs a top-level glTF 2.0 menu.
+in File Type Specific Options), and installs a top-level GLB I/O menu.
 
 API 1.0 (`maya.OpenMaya` + `maya.OpenMayaMPx`) because MPxFileTranslator
 is only exposed in 1.0. Internal modules use API 2.0 freely.
@@ -17,8 +17,8 @@ import maya.mel as mel
 
 
 PLUGIN_NAME = "maya_glb_io"
-PLUGIN_VERSION = "0.2.0"
-PLUGIN_VENDOR = "Anno Maya Tools"
+PLUGIN_VERSION = "1.0.0"
+PLUGIN_VENDOR = "annomodtutorials"
 
 # Name of the MEL global proc Maya calls to build the File Specifics panel.
 # Defined inline (via mel.eval) during initializePlugin so we don't need to

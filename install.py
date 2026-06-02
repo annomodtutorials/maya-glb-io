@@ -6,7 +6,7 @@ HOW TO USE
 2. Drag THIS file (install.py) from your file browser into the Maya viewport
    (the big 3D area).
 3. A confirmation dialog appears. Click OK.
-4. A "glTF 2.0" menu shows up in Maya's main menu bar.
+4. A "GLB I/O" menu shows up in Maya's main menu bar.
 
 WHAT IT DOES
 ============
@@ -202,7 +202,7 @@ def onMayaDroppedPythonFile(*args):
         _confirm(
             "Maya GLB I/O installed",
             "Maya GLB I/O " + MODULE_VERSION + " is installed and loaded.\n\n"
-            "A 'glTF 2.0' menu is now in Maya's main menu bar.\n\n"
+            "A 'GLB I/O' menu is now in Maya's main menu bar.\n\n"
             "Installed from:\n  " + repo_root + "\n\n"
             "Module file written to:\n  " + mod_path + "\n\n"
             "Keep this folder where it is - Maya points at it rather than "

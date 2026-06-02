@@ -14,7 +14,7 @@ itch.io (aim for < 8 MB per GIF; compress with gifski / ezgif if needed).
 | `demo-hero.gif` | Wide hero clip: `File > Import` a `.glb`, the model snaps onto the grid fully shaded with materials. The "wow" shot. | ~1600 × 900 px, looping, < 8 MB |
 | `demo-import.gif` | Importing a compressed (Draco) / Sketchfab GLB that other tools choke on — show it just opening. | ~1000 × 650 px, looping, < 6 MB |
 | `demo-variants.gif` | Switching the live **Material Variant** dropdown in the Attribute Editor and the look changing instantly in the viewport. | ~1000 × 650 px, looping, < 6 MB |
-| `demo-export.gif` | Exporting a rigged, animated character to GLB via the **glTF 2.0** menu (then optionally re-importing to show the round-trip). | ~1000 × 650 px, looping, < 6 MB |
+| `demo-export.gif` | Exporting a rigged, animated character to GLB via the **GLB I/O** menu (then optionally re-importing to show the round-trip). | ~1000 × 650 px, looping, < 6 MB |
 
 ## Notes
 - Filenames are case-sensitive on GitHub Pages — match them exactly.

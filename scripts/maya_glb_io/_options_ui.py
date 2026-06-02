@@ -234,7 +234,7 @@ def _resolve_initial_options(initial_settings):
     """If `initial_settings` is non-empty, parse it. Otherwise pull defaults from prefs.
 
     This lets a fresh File > Import dialog open already populated with the user's
-    saved preferences (set via glTF 2.0 > Preferences...).
+    saved preferences (set via GLB I/O > Preferences...).
     """
     if initial_settings:
         return _prefs.parse(initial_settings)
