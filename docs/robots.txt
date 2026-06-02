@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://annomodtutorials.github.io/maya-glb-io/sitemap.xml

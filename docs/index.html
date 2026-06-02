@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maya GLB I/O — Free glTF/GLB Importer &amp; Exporter for Maya</title>
+<meta name="description" content="Maya GLB I/O is the free, open-source (MIT) glTF/GLB importer and exporter for Autodesk Maya 2022+. Full materials, rigs, animation, morph targets, material variants and Draco — nothing behind a paywall.">
+<meta name="keywords" content="Maya GLB importer, Maya glTF exporter, Maya GLB plugin, import GLB into Maya, free Maya glTF, glTF 2.0 Maya, Draco Maya, Maya GLB I/O, Sketchfab Maya, AI 3D Maya">
+<meta name="author" content="LordJacko">
+<link rel="canonical" href="https://annomodtutorials.github.io/maya-glb-io/">
+<meta name="theme-color" content="#0c0f17">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Maya GLB I/O — Free glTF/GLB Importer &amp; Exporter for Maya">
+<meta property="og:description" content="The complete glTF 2.0 plugin for Maya — import and export, rigs, morphs, materials, Draco. Free and MIT.">
+<meta property="og:url" content="https://annomodtutorials.github.io/maya-glb-io/">
+<meta property="og:image" content="assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="Maya GLB I/O">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Maya GLB I/O — Free glTF/GLB Importer &amp; Exporter for Maya">
+<meta name="twitter:description" content="The complete glTF 2.0 plugin for Maya — import and export, rigs, morphs, materials, Draco. Free and MIT.">
+<meta name="twitter:image" content="assets/og-image.png">
+
+<!-- JSON-LD structured data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Maya GLB I/O",
+  "description": "The free, open-source glTF / GLB importer and exporter for Autodesk Maya — full materials, rigs, animation, morph targets, material variants and Draco.",
+  "applicationCategory": "DesignApplication",
+  "operatingSystem": "Windows, macOS, Linux (Autodesk Maya 2022+)",
+  "softwareVersion": "1.0.0",
+  "softwareRequirements": "Autodesk Maya 2022 or newer (Python 3)",
+  "license": "https://opensource.org/licenses/MIT",
+  "downloadUrl": "https://github.com/annomodtutorials/maya-glb-io/releases",
+  "url": "https://annomodtutorials.github.io/maya-glb-io/",
+  "author": {
+    "@type": "Person",
+    "name": "LordJacko"
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+</script>
+
+<style>
+/* ------------------------------------------------------------------ *
+ * Maya GLB I/O — landing page. Fully self-contained: no external      *
+ * CSS/JS/fonts/CDNs. System font stack + inline SVG icons only.       *
+ * ------------------------------------------------------------------ */
+
+:root{
+  --bg:        #0a0d14;
+  --bg-2:      #0e1320;
+  --panel:     #121829;
+  --panel-2:   #161d31;
+  --line:      #232c45;
+  --line-soft: #1a2235;
+  --text:      #e8ecf6;
+  --muted:     #9aa6c2;
+  --muted-2:   #6c7796;
+  --accent:    #18e0c8;   /* single accent color */
+  --accent-2:  #0fb6a3;
+  --accent-dk: #0a3b38;
+  --danger:    #ff6b6b;
+  --radius:    14px;
+  --maxw:      1160px;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font);
+  font-size:17px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+h1,h2,h3{line-height:1.15;margin:0 0 .4em;letter-spacing:-.02em}
+h2{font-size:clamp(1.7rem,3.4vw,2.5rem)}
+h3{font-size:1.18rem}
+p{margin:0 0 1em}
+img{max-width:100%;display:block}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px}
+.section{padding:88px 0;position:relative}
+.eyebrow{
+  display:inline-block;font-size:.78rem;font-weight:700;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--accent);margin-bottom:14px;
+}
+.lede{color:var(--muted);font-size:1.1rem;max-width:62ch}
+.center{text-align:center}
+.center .lede{margin-left:auto;margin-right:auto}
+
+/* ---------- buttons ---------- */
+.btn{
+  display:inline-flex;align-items:center;gap:9px;justify-content:center;
+  font-weight:650;font-size:1rem;padding:14px 24px;border-radius:11px;
+  border:1px solid transparent;cursor:pointer;transition:transform .15s ease,
+  box-shadow .2s ease,background .2s ease,border-color .2s ease;text-decoration:none;
+}
+.btn:hover{text-decoration:none;transform:translateY(-2px)}
+.btn-primary{
+  background:linear-gradient(135deg,var(--accent),var(--accent-2));
+  color:#02110f;box-shadow:0 10px 30px -10px rgba(24,224,200,.6);
+}
+.btn-primary:hover{box-shadow:0 16px 40px -10px rgba(24,224,200,.75)}
+.btn-ghost{background:rgba(255,255,255,.03);color:var(--text);border-color:var(--line)}
+.btn-ghost:hover{border-color:var(--accent);background:rgba(24,224,200,.07)}
+.btn svg{width:19px;height:19px;flex:0 0 auto}
+
+/* ---------- top nav ---------- */
+.nav{
+  position:sticky;top:0;z-index:50;
+  background:rgba(10,13,20,.72);backdrop-filter:blur(12px);
+  border-bottom:1px solid transparent;transition:border-color .3s ease,background .3s ease;
+}
+.nav.scrolled{border-bottom-color:var(--line-soft);background:rgba(10,13,20,.9)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:64px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:750;letter-spacing:-.02em;color:var(--text)}
+.brand:hover{text-decoration:none}
+.brand .logo{
+  width:30px;height:30px;border-radius:8px;flex:0 0 auto;
+  background:linear-gradient(135deg,var(--accent),var(--accent-2));
+  display:grid;place-items:center;color:#02110f;font-weight:800;font-size:.85rem;
+}
+.nav-links{display:flex;align-items:center;gap:26px}
+.nav-links a{color:var(--muted);font-weight:550;font-size:.95rem}
+.nav-links a:hover{color:var(--text);text-decoration:none}
+.nav-cta{padding:9px 16px;font-size:.92rem}
+.nav-toggle{display:none;background:none;border:0;color:var(--text);cursor:pointer;padding:6px}
+.nav-toggle svg{width:26px;height:26px}
+
+/* ---------- hero ---------- */
+.hero{position:relative;padding:96px 0 84px;overflow:hidden}
+.hero-bg{position:absolute;inset:0;z-index:0;pointer-events:none}
+.hero-bg .grid{
+  position:absolute;inset:-2px;
+  background-image:
+    linear-gradient(var(--line-soft) 1px,transparent 1px),
+    linear-gradient(90deg,var(--line-soft) 1px,transparent 1px);
+  background-size:46px 46px;
+  -webkit-mask-image:radial-gradient(ellipse 70% 60% at 50% 0%,#000 30%,transparent 75%);
+          mask-image:radial-gradient(ellipse 70% 60% at 50% 0%,#000 30%,transparent 75%);
+  opacity:.5;
+  animation:gridDrift 30s linear infinite;
+}
+.hero-bg .glow{
+  position:absolute;width:760px;height:760px;border-radius:50%;
+  filter:blur(80px);opacity:.4;
+}
+.hero-bg .glow.a{top:-340px;left:50%;transform:translateX(-50%);
+  background:radial-gradient(circle,rgba(24,224,200,.55),transparent 60%)}
+.hero-bg .glow.b{top:-120px;right:-220px;width:520px;height:520px;
+  background:radial-gradient(circle,rgba(70,120,255,.35),transparent 60%)}
+@keyframes gridDrift{from{background-position:0 0,0 0}to{background-position:46px 46px,46px 46px}}
+.hero-inner{position:relative;z-index:1;text-align:center;max-width:880px;margin:0 auto}
+.hero h1{
+  font-size:clamp(2.4rem,6vw,4.2rem);font-weight:800;letter-spacing:-.035em;margin-bottom:.25em;
+}
+.hero h1 .grad{
+  background:linear-gradient(120deg,var(--accent),#6fd0ff 70%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.hero .tagline{font-size:clamp(1.05rem,2.4vw,1.4rem);color:var(--muted);max-width:60ch;margin:0 auto 1.6em}
+.hero-cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:30px}
+.badges{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.badge{
+  display:inline-flex;align-items:center;gap:7px;font-size:.84rem;font-weight:600;
+  padding:7px 14px;border-radius:999px;border:1px solid var(--line);
+  background:rgba(255,255,255,.02);color:var(--muted);
+}
+.badge .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent)}
+.badge svg{width:15px;height:15px;color:var(--accent)}
+
+/* ---------- generic grid ---------- */
+.grid-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+.card{
+  background:var(--panel);border:1px solid var(--line-soft);border-radius:var(--radius);
+  padding:24px;transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease;
+}
+.card:hover{transform:translateY(-4px);border-color:var(--line);
+  box-shadow:0 18px 40px -24px rgba(0,0,0,.8)}
+.card .ico{
+  width:42px;height:42px;border-radius:10px;display:grid;place-items:center;margin-bottom:14px;
+  background:linear-gradient(135deg,rgba(24,224,200,.16),rgba(24,224,200,.04));
+  border:1px solid rgba(24,224,200,.22);color:var(--accent);
+}
+.card .ico svg{width:22px;height:22px}
+.card h3{margin-bottom:.3em}
+.card p{color:var(--muted);font-size:.96rem;margin:0}
+
+/* ---------- problem -> solution band ---------- */
+.band{background:
+  linear-gradient(180deg,transparent,rgba(255,255,255,.012) 50%,transparent),
+  var(--bg-2);border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft)}
+.problem{
+  background:var(--panel);border:1px solid var(--line-soft);border-radius:var(--radius);
+  padding:22px 22px 20px;transition:transform .2s ease,border-color .2s ease;
+}
+.problem:hover{transform:translateY(-3px);border-color:var(--line)}
+.problem .pain{
+  display:flex;gap:10px;color:var(--text);font-weight:600;font-style:italic;
+  font-size:1rem;margin-bottom:12px;
+}
+.problem .pain .q{color:var(--danger);font-style:normal;font-weight:800;font-size:1.3rem;line-height:1;flex:0 0 auto}
+.problem .fix{display:flex;gap:9px;color:var(--muted);font-size:.95rem}
+.problem .fix svg{width:18px;height:18px;color:var(--accent);flex:0 0 auto;margin-top:2px}
+
+/* ---------- feature tabs ---------- */
+.tabs{display:flex;gap:6px;justify-content:center;margin:0 auto 34px;
+  background:var(--panel);border:1px solid var(--line-soft);border-radius:12px;padding:6px;width:max-content;max-width:100%}
+.tab{
+  appearance:none;border:0;background:none;color:var(--muted);font-family:inherit;
+  font-weight:650;font-size:.98rem;padding:11px 26px;border-radius:8px;cursor:pointer;
+  transition:color .2s ease,background .2s ease;display:inline-flex;align-items:center;gap:9px;
+}
+.tab svg{width:18px;height:18px}
+.tab[aria-selected="true"]{color:#02110f;background:linear-gradient(135deg,var(--accent),var(--accent-2))}
+.tab:not([aria-selected="true"]):hover{color:var(--text)}
+.tabpanel[hidden]{display:none}
+.tabpanel{animation:fadeUp .35s ease both}
+
+/* ---------- comparison table ---------- */
+.cmp-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius);background:var(--panel)}
+table.cmp{border-collapse:collapse;width:100%;min-width:560px;font-size:.97rem}
+table.cmp th,table.cmp td{padding:15px 20px;text-align:left;border-bottom:1px solid var(--line-soft)}
+table.cmp thead th{font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted-2);font-weight:700}
+table.cmp tbody tr:last-child td{border-bottom:0}
+table.cmp tbody tr{transition:background .15s ease}
+table.cmp tbody tr:hover{background:rgba(255,255,255,.02)}
+table.cmp td.cap{color:var(--text);font-weight:550}
+table.cmp .col-paid{color:var(--muted);text-align:center;width:30%}
+table.cmp .col-free{text-align:center;width:30%}
+/* highlighted free column */
+table.cmp th.col-free,table.cmp td.col-free{
+  background:linear-gradient(180deg,rgba(24,224,200,.10),rgba(24,224,200,.04));
+  border-left:1px solid rgba(24,224,200,.22);border-right:1px solid rgba(24,224,200,.22);
+}
+table.cmp thead th.col-free{color:var(--accent)}
+.mark{display:inline-flex;align-items:center;justify-content:center}
+.mark svg{width:20px;height:20px}
+.mark.yes{color:var(--accent)}
+.mark.no{color:var(--muted-2)}
+.mark.partial{color:#e8b54a;font-size:.85rem;font-weight:600;font-style:italic}
+.price-pill{display:inline-block;font-weight:800;letter-spacing:.02em}
+td.col-free .price-pill{color:var(--accent)}
+td.col-paid .price-pill{color:var(--muted)}
+/* animated checkmark reveal on scroll */
+.mark.yes svg .chk{stroke-dasharray:24;stroke-dashoffset:24;transition:stroke-dashoffset .5s ease}
+.in-view .mark.yes svg .chk{stroke-dashoffset:0}
+
+/* ---------- demo / media ---------- */
+.demo-hero{
+  border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;
+  background:var(--panel-2);margin-bottom:18px;
+}
+.media-ph{
+  position:relative;display:grid;place-items:center;text-align:center;
+  background:
+    repeating-linear-gradient(45deg,rgba(255,255,255,.015) 0 14px,transparent 14px 28px),
+    var(--panel-2);
+  color:var(--muted-2);min-height:300px;padding:30px;
+}
+.media-ph.small{min-height:200px}
+.media-ph .ph-ico{width:46px;height:46px;color:var(--accent);opacity:.7;margin-bottom:12px}
+.media-ph .ph-name{font-family:var(--mono);font-size:.85rem;color:var(--muted);
+  background:rgba(0,0,0,.3);padding:4px 10px;border-radius:6px;margin-top:10px;display:inline-block}
+.media-ph .ph-title{color:var(--text);font-weight:600}
+/* When a real image loads it replaces the placeholder via <img>; until then the alt area shows */
+.demo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+.demo-grid figure{margin:0;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:var(--panel-2)}
+.demo-grid figcaption{padding:14px 18px;color:var(--muted);font-size:.92rem;border-top:1px solid var(--line-soft)}
+
+/* ---------- install ---------- */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin-bottom:24px}
+.step{background:var(--panel);border:1px solid var(--line-soft);border-radius:var(--radius);padding:22px;position:relative}
+.step .num{
+  position:absolute;top:-14px;left:22px;width:30px;height:30px;border-radius:8px;
+  display:grid;place-items:center;font-weight:800;font-size:.95rem;color:#02110f;
+  background:linear-gradient(135deg,var(--accent),var(--accent-2));
+}
+.step h3{margin:8px 0 .4em;font-size:1.05rem}
+.step p{color:var(--muted);font-size:.93rem;margin:0}
+.code-block{
+  position:relative;background:#06090f;border:1px solid var(--line);border-radius:12px;
+  padding:18px 56px 18px 20px;font-family:var(--mono);font-size:.9rem;color:#cfe8e3;
+  overflow-x:auto;white-space:pre;line-height:1.7;
+}
+.code-block .cmt{color:var(--muted-2)}
+.copy-btn{
+  position:absolute;top:10px;right:10px;display:inline-flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,.05);border:1px solid var(--line);color:var(--muted);
+  font-family:var(--font);font-size:.78rem;font-weight:600;padding:6px 10px;border-radius:8px;cursor:pointer;
+  transition:color .2s ease,border-color .2s ease,background .2s ease;
+}
+.copy-btn:hover{color:var(--text);border-color:var(--accent)}
+.copy-btn.copied{color:var(--accent);border-color:var(--accent)}
+.copy-btn svg{width:14px;height:14px}
+
+/* ---------- FAQ ---------- */
+.faq{max-width:820px;margin:0 auto}
+.faq-item{border:1px solid var(--line-soft);border-radius:12px;background:var(--panel);margin-bottom:12px;overflow:hidden}
+.faq-q{
+  width:100%;text-align:left;background:none;border:0;color:var(--text);font-family:inherit;
+  font-weight:600;font-size:1.04rem;padding:18px 54px 18px 20px;cursor:pointer;position:relative;
+}
+.faq-q:hover{color:var(--accent)}
+.faq-q .chev{position:absolute;right:20px;top:50%;transform:translateY(-50%);transition:transform .25s ease;color:var(--accent)}
+.faq-q .chev svg{width:18px;height:18px;display:block}
+.faq-q[aria-expanded="true"] .chev{transform:translateY(-50%) rotate(180deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .3s ease}
+.faq-a-inner{padding:0 20px 18px;color:var(--muted);font-size:.97rem}
+.faq-a-inner p{margin:0}
+
+/* ---------- final CTA ---------- */
+.cta-final{
+  text-align:center;background:
+   radial-gradient(ellipse 60% 100% at 50% 0%,rgba(24,224,200,.10),transparent 70%),
+   var(--bg-2);
+  border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft);
+}
+
+/* ---------- footer ---------- */
+footer{padding:42px 0;border-top:1px solid var(--line-soft);color:var(--muted-2);font-size:.92rem}
+.foot-inner{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap}
+.foot-links{display:flex;gap:22px}
+.foot-links a{color:var(--muted)}
+
+/* ---------- in-view reveal ---------- */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease}
+.reveal.in-view{opacity:1;transform:none}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ---------- responsive ---------- */
+@media (max-width:820px){
+  .nav-links{
+    position:absolute;top:64px;left:0;right:0;flex-direction:column;align-items:stretch;
+    gap:0;background:var(--bg-2);border-bottom:1px solid var(--line);padding:8px 22px 16px;
+    display:none;
+  }
+  .nav-links.open{display:flex}
+  .nav-links a{padding:12px 0;border-bottom:1px solid var(--line-soft)}
+  .nav-links .nav-cta{margin-top:12px;text-align:center}
+  .nav-toggle{display:inline-flex}
+  .section{padding:64px 0}
+  .foot-inner{flex-direction:column;text-align:center}
+}
+
+/* ---------- reduced motion ---------- */
+@media (prefers-reduced-motion:reduce){
+  *{animation:none !important;transition:none !important;scroll-behavior:auto !important}
+  .reveal{opacity:1;transform:none}
+  .mark.yes svg .chk{stroke-dashoffset:0}
+}
+</style>
+</head>
+<body>
+
+<!-- ================= NAV ================= -->
+<header class="nav" id="nav">
+  <div class="wrap nav-inner">
+    <a href="#top" class="brand"><span class="logo">G</span> Maya GLB I/O</a>
+    <nav class="nav-links" id="navLinks">
+      <a href="#problems">Why</a>
+      <a href="#features">Features</a>
+      <a href="#compare">Free vs Paid</a>
+      <a href="#demo">Demo</a>
+      <a href="#install">Install</a>
+      <a href="#faq">FAQ</a>
+      <a class="btn btn-primary nav-cta" href="https://github.com/annomodtutorials/maya-glb-io/releases">Download</a>
+    </nav>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+  </div>
+</header>
+
+<a id="top"></a>
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <div class="hero-bg" aria-hidden="true">
+    <div class="grid"></div>
+    <div class="glow a"></div>
+    <div class="glow b"></div>
+  </div>
+  <div class="wrap hero-inner">
+    <h1>Import &amp; export <span class="grad">glTF / GLB</span> in Maya.<br>Everything. For free.</h1>
+    <p class="tagline">The complete, open-source glTF 2.0 plugin for Autodesk Maya — full materials, rigs, animation, morph targets, material variants and Draco, with nothing locked behind a paywall.</p>
+    <div class="hero-cta">
+      <a class="btn btn-primary" href="https://github.com/annomodtutorials/maya-glb-io/releases">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>
+        Download — it's free
+      </a>
+      <a class="btn btn-ghost" href="https://github.com/annomodtutorials/maya-glb-io">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.2.8-.5v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.4 1 .1-.8.4-1.3.8-1.6-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 016 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.5-2.7 5.5-5.3 5.8.4.4.8 1.1.8 2.2v3.3c0 .3.2.6.8.5A11.5 11.5 0 0023.5 12C23.5 5.7 18.3.5 12 .5z"/></svg>
+        View on GitHub
+      </a>
+    </div>
+    <div class="badges">
+      <span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg> MIT licensed</span>
+      <span class="badge"><span class="dot"></span> 100% free — no paywall</span>
+      <span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg> Maya 2022+</span>
+      <span class="badge">glTF 2.0 · import &amp; export</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PROBLEMS -> SOLUTIONS ================= -->
+<section class="section band" id="problems">
+  <div class="wrap">
+    <div class="center reveal">
+      <span class="eyebrow">Why it exists</span>
+      <h2>Every "GLB in Maya" headache — fixed</h2>
+      <p class="lede">The real problems artists and modders hit when bringing glTF into Maya, and exactly how Maya GLB I/O solves each one.</p>
+    </div>
+    <div class="grid-cards" style="margin-top:40px">
+      <!-- Each problem: pain (quote) -> fix -->
+      <div class="problem reveal">
+        <div class="pain"><span class="q">&ldquo;</span>There's no free GLB importer for Maya — the only one is paid.</div>
+        <div class="fix"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg><span>Free, MIT, and full-featured. Source available — no paywall, no feature gating.</span></div>
+      </div>
+      <div class="problem reveal">
+        <div class="pain"><span class="q">&ldquo;</span>My imported model is pitch black / floating in space.</div>
+        <div class="fix"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg><span>Metallic + IBL guidance so models actually shade, plus a drop-to-floor toggle.</span></div>
+      </div>
+      <div class="problem reveal">
+        <div class="pain"><span class="q">&ldquo;</span>The Sketchfab model came in with only the diffuse texture.</div>
+        <div class="fix"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg><span>Full spec-gloss + every PBR extension mapped — not just base color.</span></div>
+      </div>
+      <div class="problem reveal">
+        <div class="pain"><span class="q">&ldquo;</span>The glass / visor isn't transparent.</div>
+        <div class="fix"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg><span>Transmission / IOR / volume plus alpha blend/mask → real refractive glass.</span></div>
+      </div>
+      <div class="problem reveal">
+        <div class="pain"><span class="q">&ldquo;</span>Emissives don't glow.</div>
+        <div class="fix"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg><span>Honors emissive strength with tunable luminance (nits) so glTF emissives shine.</span></div>
+      </div>
+      <div class="problem reveal">
+        <div class="pain"><span class="q">&ldquo;</span>My rig imports exploded / spiky / unbound.</div>
+        <div class="fix"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg><span>Robust skinning — in-hierarchy joints and fast bulk weight application.</span></div>
+      </div>
+      <div class="problem reveal">
+        <div class="pain"><span class="q">&ldquo;</span>Animation flips and pops mid-playback.</div>
+        <div class="fix"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg><span>Euler unrolling keeps fast rigs smooth — no gimbal flips.</span></div>
+      </div>
+      <div class="problem reveal">
+        <div class="pain"><span class="q">&ldquo;</span>Compressed (Draco) GLBs won't import at all.</div>
+        <div class="fix"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg><span>Automatic Draco decode — most compressed Sketchfab GLBs just work.</span></div>
+      </div>
+      <div class="problem reveal">
+        <div class="pain"><span class="q">&ldquo;</span>I can't switch material variants like in the web viewer.</div>
+        <div class="fix"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg><span>A live material-variant dropdown right in the Attribute Editor.</span></div>
+      </div>
+      <div class="problem reveal">
+        <div class="pain"><span class="q">&ldquo;</span>Maya can't EXPORT to GLB with my rig / animation.</div>
+        <div class="fix"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg><span>Full skinning, animation and morph-target export that round-trips.</span></div>
+      </div>
+      <div class="problem reveal">
+        <div class="pain"><span class="q">&ldquo;</span>Imports dump a namespace all over my scene / leave junk nodes.</div>
+        <div class="fix"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg><span>Namespace-safe with a clean transform bake — no leftover scale nodes.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FEATURES (tabbed import/export) ================= -->
+<section class="section" id="features">
+  <div class="wrap">
+    <div class="center reveal">
+      <span class="eyebrow">Feature set</span>
+      <h2>All of glTF 2.0 — both directions</h2>
+      <p class="lede">Toggle between everything the importer reads and everything the exporter writes.</p>
+    </div>
+
+    <div class="tabs reveal" role="tablist" aria-label="Feature direction">
+      <button class="tab" id="tab-import" role="tab" aria-selected="true" aria-controls="panel-import">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>
+        Import
+      </button>
+      <button class="tab" id="tab-export" role="tab" aria-selected="false" aria-controls="panel-export">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V9m0 0l-4 4m4-4l4 4M5 3h14"/></svg>
+        Export
+      </button>
+    </div>
+
+    <!-- IMPORT panel -->
+    <div class="tabpanel" id="panel-import" role="tabpanel" aria-labelledby="tab-import">
+      <div class="grid-cards">
+        <div class="card reveal">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.7l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.7l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.3 7L12 12l8.7-5M12 22V12"/></svg></div>
+          <h3>Geometry &amp; scene</h3>
+          <p>.glb and .gltf (+external .bin), auto-detected. Full node hierarchy, multi-mesh and per-material multi-primitive meshes, UVs (correct V-flip), vertex colors, UV-derived tangents.</p>
+        </div>
+        <div class="card reveal">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 16l4-8 4 6 3-4 4 6"/><path d="M3 20h18"/></svg></div>
+          <h3>Clean, drop-to-floor import</h3>
+          <p>Drop-to-floor toggle sits the model on the grid. Bakes leftover root scale (the 0.01 unit node many exporters add) into a clean identity — no junk nodes — and skips rigged meshes safely.</p>
+        </div>
+        <div class="card reveal">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="12.5" r="2.5"/><circle cx="8.5" cy="7.5" r="2.5"/><circle cx="6.5" cy="13.5" r="2.5"/><path d="M12 22a10 10 0 010-20 7 7 0 010 14h-2.3a2 2 0 100 4H12z"/></svg></div>
+          <h3>Full PBR materials</h3>
+          <p>Base color, metallic-roughness, normal, AO, emissive — into your choice of openPBR, StingrayPBS, Arnold or Maya Phong, picked per import.</p>
+        </div>
+        <div class="card reveal">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 100 18 9 9 0 000-18z"/><path d="M12 7v5l3 2"/></svg></div>
+          <h3>Advanced material extensions</h3>
+          <p>Transmission / IOR / volume glass, clearcoat, sheen, anisotropy, iridescence and specular — mapped to openPBR layers. Full legacy spec-gloss (uses both diffuse and spec/gloss, no spurious darkening).</p>
+        </div>
+        <div class="card reveal">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M8 5v14"/></svg></div>
+          <h3>Live material variants</h3>
+          <p>KHR_materials_variants becomes a live "Material Variant" dropdown on the imported object — switch looks instantly from the Attribute Editor. Pre-warmed so the first switch is instant.</p>
+        </div>
+        <div class="card reveal">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2"/><path d="M12 7v5m0 0l-4 6m4-6l4 6M8 10h8"/></svg></div>
+          <h3>Rigs, animation &amp; morphs</h3>
+          <p>Joints + skinCluster with fast bulk weights. Skeletal animation → animCurves with euler unrolling and correct fps. Morph targets → Maya blendShapes with animated weights.</p>
+        </div>
+        <div class="card reveal">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h3l2-2h8l2 2h3v12H3z"/><circle cx="12" cy="13" r="3.5"/></svg></div>
+          <h3>Cameras &amp; lights</h3>
+          <p>Perspective and orthographic cameras (FOV→focal length, clip planes). KHR_lights_punctual directional, point and spot lights → native Maya lights.</p>
+        </div>
+        <div class="card reveal">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V6a2 2 0 012-2h2M4 16v2a2 2 0 002 2h2M20 8V6a2 2 0 00-2-2h-2M20 16v2a2 2 0 01-2 2h-2"/><path d="M8 12h8"/></svg></div>
+          <h3>Draco &amp; quantization</h3>
+          <p>KHR_draco_mesh_compression decompresses on import (auto-installs the DracoPy decoder once) — most compressed Sketchfab GLBs that fail elsewhere just open. KHR_mesh_quantization dequantized correctly.</p>
+        </div>
+        <div class="card reveal">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 100 18 9 9 0 000-18z"/><path d="M3.5 9h17M3.5 15h17M12 3a14 14 0 010 18M12 3a14 14 0 000 18"/></svg></div>
+          <h3>Units &amp; namespace safety</h3>
+          <p>Auto unit conversion (glTF metres → Maya scene units). Never pollutes the scene — auto-flattens Maya's File &gt; Import namespace wrapping.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXPORT panel -->
+    <div class="tabpanel" id="panel-export" role="tabpanel" aria-labelledby="tab-export" hidden>
+      <div class="grid-cards">
+        <div class="card reveal">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V9m0 0l-4 4m4-4l4 4M5 3h14"/></svg></div>
+          <h3>GLB / glTF, selection or scene</h3>
+          <p>Write .glb or .gltf (+ external .bin), exporting your current selection or the whole scene.</p>
+        </div>
+        <div class="card reveal">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="12.5" r="2.5"/><circle cx="8.5" cy="7.5" r="2.5"/><circle cx="6.5" cy="13.5" r="2.5"/><path d="M12 22a10 10 0 010-20 7 7 0 010 14h-2.3a2 2 0 100 4H12z"/></svg></div>
+          <h3>Materials → metallic-roughness</h3>
+          <p>From openPBR, StingrayPBS, aiStandardSurface, lambert, blinn or phong → glTF metallic-roughness, with textures embedded or referenced.</p>
+        </div>
+        <div class="card reveal">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.7l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.7l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.3 7L12 12l8.7-5M12 22V12"/></svg></div>
+          <h3>Hierarchy &amp; transforms</h3>
+          <p>Node hierarchy and transforms with pivots baked correctly; root nodes carry the world transform.</p>
+        </div>
+        <div class="card reveal">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2"/><path d="M12 7v5m0 0l-4 6m4-6l4 6M8 10h8"/></svg></div>
+          <h3>Skinning export</h3>
+          <p>Joints + inverse-bind matrices + JOINTS_0 / WEIGHTS_0 written so your rig survives the round-trip.</p>
+        </div>
+        <div class="card reveal">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h3l2-7 4 14 2-7h7"/></svg></div>
+          <h3>Animation export</h3>
+          <p>Maya animCurves → glTF samplers, so your animation comes out the other side intact.</p>
+        </div>
+        <div class="card reveal">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="5"/><circle cx="16" cy="15" r="5"/></svg></div>
+          <h3>Morph-target export</h3>
+          <p>Maya blendShapes → glTF morph targets with weights.</p>
+        </div>
+        <div class="card reveal">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.9l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.9-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1.1-1.5 1.7 1.7 0 00-1.9.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.9 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.5-1.1 1.7 1.7 0 00-.3-1.9l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.9.3H9a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.9-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.9V9a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/></svg></div>
+          <h3>Export Preferences UI &amp; round-trip</h3>
+          <p>An Export Preferences window in the glTF 2.0 menu, and faithful round-tripping with the importer.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= COMPARISON ================= -->
+<section class="section band" id="compare">
+  <div class="wrap">
+    <div class="center reveal">
+      <span class="eyebrow">Honest comparison</span>
+      <h2>Free vs. paid Maya GLB plugins</h2>
+      <p class="lede">The same capabilities you'd pay for — and a couple you can't get anywhere else. Hover a row to focus it.</p>
+    </div>
+    <div class="cmp-wrap reveal" style="margin-top:34px" id="cmpTable">
+      <table class="cmp">
+        <thead>
+          <tr>
+            <th>Capability</th>
+            <th class="col-paid">Typical paid plugin</th>
+            <th class="col-free">Maya GLB I/O</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="cap">Import meshes / PBR / all shader targets</td><td class="col-paid"><span class="mark yes">__CHK__</span></td><td class="col-free"><span class="mark yes">__CHK__</span></td></tr>
+          <tr><td class="cap">Skin + skeletal animation (import)</td><td class="col-paid"><span class="mark yes">__CHK__</span></td><td class="col-free"><span class="mark yes">__CHK__</span></td></tr>
+          <tr><td class="cap">Morph targets</td><td class="col-paid"><span class="mark yes">__CHK__</span></td><td class="col-free"><span class="mark yes">__CHK__</span></td></tr>
+          <tr><td class="cap">Material variants (live switch)</td><td class="col-paid"><span class="mark yes">__CHK__</span></td><td class="col-free"><span class="mark yes">__CHK__</span> <span style="color:var(--muted);font-size:.85rem">in the Attribute Editor</span></td></tr>
+          <tr><td class="cap">Clearcoat / sheen / anisotropy / iridescence / transmission</td><td class="col-paid"><span class="mark yes">__CHK__</span></td><td class="col-free"><span class="mark yes">__CHK__</span></td></tr>
+          <tr><td class="cap">Cameras + lights</td><td class="col-paid"><span class="mark yes">__CHK__</span></td><td class="col-free"><span class="mark yes">__CHK__</span></td></tr>
+          <tr><td class="cap">Draco + quantization</td><td class="col-paid"><span class="mark yes">__CHK__</span></td><td class="col-free"><span class="mark yes">__CHK__</span></td></tr>
+          <tr><td class="cap">Legacy spec-gloss</td><td class="col-paid"><span class="mark partial">partial</span></td><td class="col-free"><span class="mark yes">__CHK__</span> <span style="color:var(--muted);font-size:.85rem">full</span></td></tr>
+          <tr><td class="cap"><strong>Full rig + anim + morph EXPORT</strong></td><td class="col-paid"><span class="mark partial">partial / none</span></td><td class="col-free"><span class="mark yes">__CHK__</span></td></tr>
+          <tr><td class="cap"><strong>Source available</strong></td><td class="col-paid"><span class="mark no">__X__</span></td><td class="col-free"><span class="mark yes">__CHK__</span> <span style="color:var(--muted);font-size:.85rem">MIT</span></td></tr>
+          <tr><td class="cap"><strong>Price</strong></td><td class="col-paid"><span class="price-pill">paid</span></td><td class="col-free"><span class="price-pill">free</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="center" style="color:var(--muted-2);font-size:.85rem;margin-top:16px">Comparison is generic and made in good faith against typical paid Maya GLB plugins; no specific product is named.</p>
+  </div>
+</section>
+
+<!-- ================= DEMO ================= -->
+<section class="section" id="demo">
+  <div class="wrap">
+    <div class="center reveal">
+      <span class="eyebrow">See it work</span>
+      <h2>From file to fully-shaded in seconds</h2>
+      <p class="lede">Screenshots and GIFs go here. (Owner: capture the clips listed below into <code>docs/assets/</code> — see <code>assets/README.md</code>.)</p>
+    </div>
+
+    <!-- HERO demo -->
+    <!-- CAPTURE: assets/demo-hero.gif  — A wide GIF of a full import: File > Import a .glb,
+         model snaps onto the grid fully shaded with materials. ~1600x900, <8 MB, looping. -->
+    <div class="demo-hero reveal">
+      <img src="assets/demo-hero.gif" alt="Importing a GLB file into Maya — the model appears fully shaded and sitting on the grid"
+           onerror="this.style.display='none';this.nextElementSibling.style.display='grid';">
+      <div class="media-ph" style="display:none">
+        <svg class="ph-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 4 20 12 6 20 6 4"/></svg>
+        <div class="ph-title">Hero demo GIF</div>
+        <div class="ph-name">assets/demo-hero.gif</div>
+      </div>
+    </div>
+
+    <!-- Feature GIFs / screenshots -->
+    <div class="demo-grid">
+      <!-- CAPTURE: assets/demo-import.gif — drag/Import of a Draco/Sketchfab GLB; ~1000x650 looping GIF. -->
+      <figure class="reveal">
+        <img src="assets/demo-import.gif" alt="Importing a compressed Draco GLB into Maya"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='grid';">
+        <div class="media-ph small" style="display:none">
+          <svg class="ph-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>
+          <div class="ph-name">assets/demo-import.gif</div>
+        </div>
+        <figcaption>Importing a compressed (Draco) GLB — auto-decoded.</figcaption>
+      </figure>
+
+      <!-- CAPTURE: assets/demo-variants.gif — switching the Material Variant dropdown in the Attribute Editor; ~1000x650 looping GIF. -->
+      <figure class="reveal">
+        <img src="assets/demo-variants.gif" alt="Switching material variants live from the Attribute Editor"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='grid';">
+        <div class="media-ph small" style="display:none">
+          <svg class="ph-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M8 5v14"/></svg>
+          <div class="ph-name">assets/demo-variants.gif</div>
+        </div>
+        <figcaption>Live material-variant switching in the Attribute Editor.</figcaption>
+      </figure>
+
+      <!-- CAPTURE: assets/demo-export.gif — exporting a rigged/animated character to GLB via the glTF 2.0 menu; ~1000x650 looping GIF. -->
+      <figure class="reveal">
+        <img src="assets/demo-export.gif" alt="Exporting a rigged, animated character from Maya to GLB"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='grid';">
+        <div class="media-ph small" style="display:none">
+          <svg class="ph-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V9m0 0l-4 4m4-4l4 4M5 3h14"/></svg>
+          <div class="ph-name">assets/demo-export.gif</div>
+        </div>
+        <figcaption>Exporting a rigged, animated character to GLB.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ================= INSTALL ================= -->
+<section class="section band" id="install">
+  <div class="wrap">
+    <div class="center reveal">
+      <span class="eyebrow">Get started</span>
+      <h2>Install in three steps</h2>
+      <p class="lede">No build step, no dependencies to wrangle. Download, point Maya at the plug-in, and a glTF 2.0 menu appears.</p>
+    </div>
+
+    <div class="steps" style="margin-top:46px">
+      <div class="step reveal">
+        <span class="num">1</span>
+        <h3>Download the repo</h3>
+        <p>Grab the latest release zip (or clone) and unzip it somewhere you'll keep it — e.g. your Maya scripts folder or any project folder.</p>
+      </div>
+      <div class="step reveal">
+        <span class="num">2</span>
+        <h3>Load the plug-in</h3>
+        <p>In Maya open Windows &gt; Settings/Preferences &gt; Plug-in Manager, browse to <code>plug-ins/maya_glb_io.py</code> and tick Loaded (and Auto&nbsp;load). It bootstraps <code>scripts/</code> onto the path for you.</p>
+      </div>
+      <div class="step reveal">
+        <span class="num">3</span>
+        <h3>Use the glTF 2.0 menu</h3>
+        <p>A top-level <strong>glTF 2.0</strong> menu appears with Import/Export, plus File &gt; Import works natively. That's it.</p>
+      </div>
+    </div>
+
+    <p class="reveal" style="color:var(--muted);margin-top:8px">Prefer a module install? Drop the included <code>glb_io.mod</code> into your Maya <code>modules</code> folder — or use the drag-and-drop <code>install.py</code> from the release. Paste either path below:</p>
+
+    <!-- Plug-in Manager path / mod hint -->
+    <div class="code-block reveal" id="code-mod"><span class="cmt"># Module file — copy glb_io.mod into your Maya modules folder:</span>
+<span class="cmt"># Windows:</span> %USERPROFILE%\Documents\maya\modules\
+<span class="cmt"># macOS:  </span> ~/Library/Preferences/Autodesk/maya/modules/
+<span class="cmt"># Linux:  </span> ~/maya/modules/
+      <button class="copy-btn" data-copy-target="code-mod" aria-label="Copy module install paths">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 012-2h10"/></svg>
+        Copy
+      </button>
+    </div>
+
+    <!-- One-liner to add scripts to path (alt manual route) -->
+    <div class="code-block reveal" id="code-py" style="margin-top:14px"><span class="cmt"># Or load it from the Script Editor (Python) — point this at your unzipped folder:</span>
+import maya.cmds as cmds
+cmds.loadPlugin(r"C:\path\to\maya-glb-io\plug-ins\maya_glb_io.py")
+      <button class="copy-btn" data-copy-target="code-py" aria-label="Copy Python load snippet">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 012-2h10"/></svg>
+        Copy
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FAQ ================= -->
+<section class="section" id="faq">
+  <div class="wrap">
+    <div class="center reveal">
+      <span class="eyebrow">Questions</span>
+      <h2>FAQ</h2>
+    </div>
+    <div class="faq" style="margin-top:36px">
+
+      <div class="faq-item reveal">
+        <button class="faq-q" aria-expanded="false">Is it really free?
+          <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
+        </button>
+        <div class="faq-a"><div class="faq-a-inner"><p>Yes — completely. Maya GLB I/O is MIT-licensed: 100% free, no paywall, no feature gating, no donations required. The full source is on GitHub, and every feature on this page is in the free build.</p></div></div>
+      </div>
+
+      <div class="faq-item reveal">
+        <button class="faq-q" aria-expanded="false">Which Maya versions are supported?
+          <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
+        </button>
+        <div class="faq-a"><div class="faq-a-inner"><p>Autodesk Maya 2022 and newer, including 2024, 2025 and 2026 (anything on Python 3). The parser and writer are pure Python with no heavy dependencies.</p></div></div>
+      </div>
+
+      <div class="faq-item reveal">
+        <button class="faq-q" aria-expanded="false">Does it export too, or only import?
+          <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
+        </button>
+        <div class="faq-a"><div class="faq-a-inner"><p>Both. It writes .glb and .gltf with materials, node hierarchy, full skinning, animation and morph targets — and round-trips faithfully with the importer. Full rig + animation + morph export is where it's ahead of most tools.</p></div></div>
+      </div>
+
+      <div class="faq-item reveal">
+        <button class="faq-q" aria-expanded="false">Does it handle Draco-compressed GLBs?
+          <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
+        </button>
+        <div class="faq-a"><div class="faq-a-inner"><p>Yes. KHR_draco_mesh_compression is decoded on import — most compressed Sketchfab GLBs that fail in other free tools just open. The first Draco import auto-installs the DracoPy decoder, which needs a one-time internet connection. (A mesh whose skin weights are compressed inside Draco imports as static geometry — rare.)</p></div></div>
+      </div>
+
+      <div class="faq-item reveal">
+        <button class="faq-q" aria-expanded="false">Will advanced materials look right in the viewport?
+          <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
+        </button>
+        <div class="faq-a"><div class="faq-a-inner"><p>Advanced layers (clearcoat, sheen, anisotropy, iridescence) render fully in Arnold; Viewport 2.0 shows them only partially — the data is all there, it's a viewport limitation. Imported light intensities are approximate (glTF physical units → Maya) and easy to tweak. Animation is imported/exported as per-frame samples with euler rotation (no glTF curve tangents).</p></div></div>
+      </div>
+
+      <div class="faq-item reveal">
+        <button class="faq-q" aria-expanded="false">How do I report a bug or request a feature?
+          <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
+        </button>
+        <div class="faq-a"><div class="faq-a-inner"><p>Open an issue on the <a href="https://github.com/annomodtutorials/maya-glb-io/issues">GitHub issue tracker</a>. Since the source is MIT, pull requests are welcome too. Note: Maya rejects non-ASCII node names, so such nodes are renamed to a safe ASCII name on import.</p></div></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ================= FINAL CTA ================= -->
+<section class="section cta-final">
+  <div class="wrap center reveal">
+    <h2>Stop paying for a Maya GLB plugin.</h2>
+    <p class="lede">Rigs, morphs, materials, Draco — all of glTF, both directions, $0.</p>
+    <div class="hero-cta" style="margin-top:24px">
+      <a class="btn btn-primary" href="https://github.com/annomodtutorials/maya-glb-io/releases">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>
+        Download — it's free
+      </a>
+      <a class="btn btn-ghost" href="https://github.com/annomodtutorials/maya-glb-io">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.2.8-.5v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.4 1 .1-.8.4-1.3.8-1.6-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 016 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.5-2.7 5.5-5.3 5.8.4.4.8 1.1.8 2.2v3.3c0 .3.2.6.8.5A11.5 11.5 0 0023.5 12C23.5 5.7 18.3.5 12 .5z"/></svg>
+        View on GitHub
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+  <div class="wrap foot-inner">
+    <div>
+      <strong>Maya GLB I/O</strong> · MIT licensed · v1.0.0<br>
+      <span style="color:var(--muted-2)">Made by LordJacko for the Maya &amp; modding community.</span>
+    </div>
+    <div class="foot-links">
+      <a href="https://github.com/annomodtutorials/maya-glb-io">GitHub</a>
+      <a href="https://github.com/annomodtutorials/maya-glb-io/releases">Releases</a>
+      <a href="https://github.com/annomodtutorials/maya-glb-io/issues">Report a bug</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ------------------------------------------------------------------ *
+ * All interactivity is vanilla JS and progressive: with JS disabled   *
+ * the page is fully readable (tabs both visible, FAQ open via details- *
+ * style fallback below, reveals already visible via .no-js handling).  *
+ * ------------------------------------------------------------------ */
+(function(){
+  "use strict";
+  var reduceMotion = window.matchMedia &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---- inject the checkmark / x SVGs (kept out of HTML for brevity) ---- */
+  var CHK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path class="chk" d="M5 13l4 4L19 7"/></svg>';
+  var XX  = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+  document.querySelectorAll(".mark.yes").forEach(function(el){
+    if(el.textContent.trim()==="__CHK__") el.innerHTML = CHK;
+  });
+  document.querySelectorAll(".mark.no").forEach(function(el){
+    if(el.textContent.trim()==="__X__") el.innerHTML = XX;
+  });
+
+  /* ---- sticky nav shadow on scroll ---- */
+  var nav = document.getElementById("nav");
+  function onScroll(){ nav.classList.toggle("scrolled", window.scrollY > 8); }
+  onScroll();
+  window.addEventListener("scroll", onScroll, {passive:true});
+
+  /* ---- mobile nav toggle ---- */
+  var toggle = document.getElementById("navToggle");
+  var links  = document.getElementById("navLinks");
+  toggle.addEventListener("click", function(){
+    var open = links.classList.toggle("open");
+    toggle.setAttribute("aria-expanded", open ? "true" : "false");
+  });
+  links.querySelectorAll("a").forEach(function(a){
+    a.addEventListener("click", function(){
+      links.classList.remove("open");
+      toggle.setAttribute("aria-expanded","false");
+    });
+  });
+
+  /* ---- feature tabs (import / export) ---- */
+  var tabs = document.querySelectorAll(".tab");
+  function selectTab(tab){
+    tabs.forEach(function(t){
+      var sel = t === tab;
+      t.setAttribute("aria-selected", sel ? "true" : "false");
+      var panel = document.getElementById(t.getAttribute("aria-controls"));
+      if(panel) panel.hidden = !sel;
+    });
+  }
+  tabs.forEach(function(t){
+    t.addEventListener("click", function(){ selectTab(t); });
+    t.addEventListener("keydown", function(e){
+      var arr = Array.prototype.slice.call(tabs);
+      var i = arr.indexOf(t);
+      if(e.key==="ArrowRight"||e.key==="ArrowLeft"){
+        e.preventDefault();
+        var ni = e.key==="ArrowRight" ? (i+1)%arr.length : (i-1+arr.length)%arr.length;
+        arr[ni].focus(); selectTab(arr[ni]);
+      }
+    });
+  });
+
+  /* ---- copy buttons ---- */
+  document.querySelectorAll(".copy-btn").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var block = document.getElementById(btn.getAttribute("data-copy-target"));
+      if(!block) return;
+      // gather text minus the button label
+      var clone = block.cloneNode(true);
+      var b = clone.querySelector(".copy-btn"); if(b) b.remove();
+      var text = clone.textContent.replace(/\s+$/,"");
+      var done = function(){
+        var label = btn.querySelector("svg") ? btn : btn;
+        btn.classList.add("copied");
+        var orig = btn.innerHTML;
+        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg> Copied';
+        setTimeout(function(){ btn.classList.remove("copied"); btn.innerHTML = orig; }, 1600);
+      };
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(done, function(){ fallbackCopy(text, done); });
+      } else { fallbackCopy(text, done); }
+    });
+  });
+  function fallbackCopy(text, cb){
+    var ta = document.createElement("textarea");
+    ta.value = text; ta.setAttribute("readonly","");
+    ta.style.position="absolute"; ta.style.left="-9999px";
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand("copy"); }catch(e){}
+    document.body.removeChild(ta); cb && cb();
+  }
+
+  /* ---- FAQ accordion ---- */
+  document.querySelectorAll(".faq-q").forEach(function(q){
+    q.addEventListener("click", function(){
+      var open = q.getAttribute("aria-expanded")==="true";
+      var ans = q.nextElementSibling;
+      q.setAttribute("aria-expanded", open ? "false" : "true");
+      if(open){ ans.style.maxHeight = null; }
+      else    { ans.style.maxHeight = ans.scrollHeight + "px"; }
+    });
+  });
+  // keep open answers sized correctly on resize
+  window.addEventListener("resize", function(){
+    document.querySelectorAll('.faq-q[aria-expanded="true"]').forEach(function(q){
+      var ans = q.nextElementSibling;
+      ans.style.maxHeight = ans.scrollHeight + "px";
+    });
+  });
+
+  /* ---- in-view reveals ---- */
+  var reveals = document.querySelectorAll(".reveal");
+  if(reduceMotion || !("IntersectionObserver" in window)){
+    reveals.forEach(function(el){ el.classList.add("in-view"); });
+    var t = document.getElementById("cmpTable"); if(t) t.classList.add("in-view");
+  } else {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if(en.isIntersecting){ en.target.classList.add("in-view"); io.unobserve(en.target); }
+      });
+    }, {rootMargin:"0px 0px -8% 0px", threshold:0.08});
+    reveals.forEach(function(el){ io.observe(el); });
+  }
+})();
+</script>
+
+</body>
+</html>
