@@ -121,9 +121,10 @@ three methods below you find easiest — they all end with a **glTF 2.0** menu i
 
 ### Method (a) — Drag-and-drop installer (easiest)
 
-1. Download this repository (green **Code** button → **Download ZIP**), then unzip it somewhere you
-   won't move or delete (for example `C:\maya-plugins\maya-glb-io\` on Windows, or
-   `~/maya-plugins/maya-glb-io/` on macOS/Linux).
+1. Go to the **[Releases page](https://github.com/annomodtutorials/maya-glb-io/releases/latest)** and
+   download **`maya-glb-io-vX.Y.Z.zip`** (the named installer asset — *not* the "Source code" archives).
+   Unzip it somewhere you won't move or delete (for example `C:\maya-plugins\maya-glb-io\` on Windows,
+   or `~/maya-plugins/maya-glb-io/` on macOS/Linux).
 2. Start Autodesk Maya.
 3. Open the unzipped folder in your file browser (Windows Explorer / macOS Finder).
 4. Find the file named **`install.py`** in the top level of the folder.

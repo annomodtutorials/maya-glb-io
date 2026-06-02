@@ -702,13 +702,13 @@ footer{padding:42px 0;border-top:1px solid var(--line-soft);color:var(--muted-2)
     <div class="steps" style="margin-top:46px">
       <div class="step reveal">
         <span class="num">1</span>
-        <h3>Download the repo</h3>
-        <p>Grab the latest release zip (or clone) and unzip it somewhere you'll keep it — e.g. your Maya scripts folder or any project folder.</p>
+        <h3>Download the installer</h3>
+        <p>Grab <code>maya-glb-io-vX.Y.Z.zip</code> from the <a href="https://github.com/annomodtutorials/maya-glb-io/releases/latest">Releases page</a> and unzip it somewhere you'll keep it — e.g. your Maya scripts folder or any project folder.</p>
       </div>
       <div class="step reveal">
         <span class="num">2</span>
-        <h3>Load the plug-in</h3>
-        <p>In Maya open Windows &gt; Settings/Preferences &gt; Plug-in Manager, browse to <code>plug-ins/maya_glb_io.py</code> and tick Loaded (and Auto&nbsp;load). It bootstraps <code>scripts/</code> onto the path for you.</p>
+        <h3>Drag <code>install.py</code> into Maya</h3>
+        <p>Start Maya, then drag <code>install.py</code> from the unzipped folder into the viewport and click OK. (Prefer manual? Plug-in Manager &gt; browse to <code>plug-ins/maya_glb_io.py</code> &gt; tick Loaded.)</p>
       </div>
       <div class="step reveal">
         <span class="num">3</span>
@@ -717,10 +717,10 @@ footer{padding:42px 0;border-top:1px solid var(--line-soft);color:var(--muted-2)
       </div>
     </div>
 
-    <p class="reveal" style="color:var(--muted);margin-top:8px">Prefer a module install? Drop the included <code>glb_io.mod</code> into your Maya <code>modules</code> folder — or use the drag-and-drop <code>install.py</code> from the release. Paste either path below:</p>
+    <p class="reveal" style="color:var(--muted);margin-top:8px">Prefer a module install? Drop the included <code>maya_glb_io.mod</code> into your Maya <code>modules</code> folder (edit its first line to point at your unzipped folder). Paste a module path below:</p>
 
     <!-- Plug-in Manager path / mod hint -->
-    <div class="code-block reveal" id="code-mod"><span class="cmt"># Module file — copy glb_io.mod into your Maya modules folder:</span>
+    <div class="code-block reveal" id="code-mod"><span class="cmt"># Module file — copy maya_glb_io.mod into your Maya modules folder:</span>
 <span class="cmt"># Windows:</span> %USERPROFILE%\Documents\maya\modules\
 <span class="cmt"># macOS:  </span> ~/Library/Preferences/Autodesk/maya/modules/
 <span class="cmt"># Linux:  </span> ~/maya/modules/
