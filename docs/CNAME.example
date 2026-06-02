@@ -1,0 +1,39 @@
+# ---------------------------------------------------------------------------
+# Custom domain for GitHub Pages — HOW TO USE THIS FILE
+# ---------------------------------------------------------------------------
+# GitHub Pages reads a file literally named `CNAME` (no extension) that
+# contains ONLY your bare domain on a single line, e.g.:
+#
+#     mayaglbio.com
+#
+# This file is `CNAME.example` ON PURPOSE: an empty or malformed real `CNAME`
+# can break Pages, so we ship the template instead. When you have a domain:
+#
+#   1. Copy this file to `CNAME` (same `docs/` folder), then DELETE everything
+#      in it and replace it with just your domain on one line. No `#`, no
+#      "http://", no path — just the host. For example:
+#
+#          yourdomain.com
+#
+#      (or a subdomain like `tools.yourdomain.com`)
+#
+#   2. Commit and push. GitHub: Settings -> Pages -> Custom domain will pick
+#      it up (or set it there, which writes the `CNAME` file for you).
+#
+#   3. At your DNS provider, point the domain at GitHub Pages:
+#        - Apex / root domain (yourdomain.com): add four A records to
+#            185.199.108.153
+#            185.199.109.153
+#            185.199.110.153
+#            185.199.111.153
+#          (and optionally AAAA records for IPv6).
+#        - Subdomain (www or tools): add a CNAME record ->
+#            annomodtutorials.github.io
+#
+#   4. Wait for DNS to propagate, then tick "Enforce HTTPS" in Settings -> Pages.
+#
+# Until then, the site lives at:
+#     https://annomodtutorials.github.io/maya-glb-io/
+#
+# replace with yourdomain.com
+# ---------------------------------------------------------------------------

@@ -1,0 +1,61 @@
+# ---------------------------------------------------------------------------
+# Python
+# ---------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.venv/
+venv/
+
+# ---------------------------------------------------------------------------
+# Maya junk
+# ---------------------------------------------------------------------------
+*.swatches
+*.mayaSwatches
+mayaLog*
+*.ma.tmp
+*.mb.tmp
+*.bak
+incrementalSave/
+
+# ---------------------------------------------------------------------------
+# OS junk
+# ---------------------------------------------------------------------------
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+Desktop.ini
+
+# ---------------------------------------------------------------------------
+# Editor / IDE
+# ---------------------------------------------------------------------------
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# ---------------------------------------------------------------------------
+# Dev / test artifacts (keep the source — only ignore generated output)
+# ---------------------------------------------------------------------------
+_dev/_smoke_out/
+**/sourceimages/
+
+# Large binary test assets are not shipped in the repo. Keep the folder but
+# ignore the heavy .glb / .gltf samples (drop your own in to run smoke tests).
+test_assets/*.glb
+test_assets/*.gltf
+test_assets/*.bin
+
+# Internal launch / marketing docs (product brief, SEO plan, video script,
+# GitHub About cheat-sheet) — kept LOCAL, NOT published to the public repo.
+# The _dev/smoke_*.py test scripts are NOT ignored (they ship for contributors).
+_dev/RELEASE/
