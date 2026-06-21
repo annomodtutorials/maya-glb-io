@@ -383,7 +383,7 @@ footer{padding:42px 0;border-top:1px solid var(--line-soft);color:var(--muted-2)
       <a href="#demo">Demo</a>
       <a href="#install">Install</a>
       <a href="#faq">FAQ</a>
-      <a class="btn btn-primary nav-cta" href="https://saltercreektools.gumroad.com/l/maya-glb-io?wanted=true">Download</a>
+      <a class="btn btn-primary nav-cta gumroad-button" href="https://saltercreektools.gumroad.com/l/maya-glb-io?wanted=true">Download</a>
     </nav>
     <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
@@ -404,7 +404,7 @@ footer{padding:42px 0;border-top:1px solid var(--line-soft);color:var(--muted-2)
     <h1>Import &amp; export <span class="grad">glTF / GLB</span> in Maya.<br>Everything. For free.</h1>
     <p class="tagline">The complete, open-source glTF 2.0 plugin for Autodesk Maya — full materials, rigs, animation, morph targets, material variants and Draco, with nothing locked behind a paywall.</p>
     <div class="hero-cta">
-      <a class="btn btn-primary" href="https://saltercreektools.gumroad.com/l/maya-glb-io?wanted=true">
+      <a class="btn btn-primary gumroad-button" href="https://saltercreektools.gumroad.com/l/maya-glb-io?wanted=true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>
         Download — it's free
       </a>
@@ -803,7 +803,7 @@ cmds.loadPlugin(r"C:\path\to\maya-glb-io\plug-ins\maya_glb_io.py")
     <h2>Stop paying for a Maya GLB plugin.</h2>
     <p class="lede">Rigs, morphs, materials, Draco — all of glTF, both directions, $0.</p>
     <div class="hero-cta" style="margin-top:24px">
-      <a class="btn btn-primary" href="https://saltercreektools.gumroad.com/l/maya-glb-io?wanted=true">
+      <a class="btn btn-primary gumroad-button" href="https://saltercreektools.gumroad.com/l/maya-glb-io?wanted=true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>
         Download — it's free
       </a>
@@ -961,6 +961,9 @@ cmds.loadPlugin(r"C:\path\to\maya-glb-io\plug-ins\maya_glb_io.py")
   }
 })();
 </script>
+
+<!-- Gumroad overlay: makes .gumroad-button links open the checkout in a modal -->
+<script src="https://gumroad.com/js/gumroad.js"></script>
 
 </body>
 </html>
