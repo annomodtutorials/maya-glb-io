@@ -190,6 +190,19 @@ All commands live under the **GLB I/O** menu (and `.glb` / `.gltf` also show up 
 
 ---
 
+## Staying up to date
+
+You'll know when a new version ships, three ways:
+
+- **Inside Maya** — the plug-in checks once a day on load (silently, only speaking up if there's
+  something new), and *GLB I/O → Check for Updates...* always tells you whether you're current.
+- **GitHub** — click **Watch → Custom → Releases** on the
+  [repo](https://github.com/annomodtutorials/maya-glb-io) to get an email on every release.
+- **Update emails** — prefer email? Grab it from the
+  [Gumroad page](https://saltercreektools.gumroad.com/l/maya-glb-io) and you'll be notified there.
+
+---
+
 ## Known limitations
 
 - Advanced material layers (clearcoat / sheen / anisotropy / iridescence) render fully in

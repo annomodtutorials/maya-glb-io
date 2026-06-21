@@ -84,6 +84,13 @@ def install():
 
     cmds.menuItem(
         parent=MENU_ID,
+        label="Check for Updates...",
+        annotation="Check GitHub for a newer version of Maya GLB I/O.",
+        command="from maya_glb_io import commands; commands.check_for_updates()",
+    )
+
+    cmds.menuItem(
+        parent=MENU_ID,
         label="About maya_glb_io...",
         command="from maya_glb_io import commands; commands.show_about()",
     )

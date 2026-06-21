@@ -185,6 +185,12 @@ def show_about():
     )
 
 
+def check_for_updates():
+    """Manually check GitHub for a newer release (GLB I/O > Check for Updates)."""
+    from maya_glb_io import _update_check
+    _update_check.check(force=True)
+
+
 # ---------------------------------------------------------------------------
 # KHR_materials_variants — material variant switching
 # ---------------------------------------------------------------------------

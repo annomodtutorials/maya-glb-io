@@ -133,6 +133,14 @@ def initializePlugin(plugin_mobject):
             + traceback.format_exc()
         )
 
+    # One-time, throttled, fail-silent "newer version available" check.
+    try:
+        import maya.utils
+        from maya_glb_io import _update_check
+        maya.utils.executeDeferred(_update_check.auto_check)
+    except Exception:
+        pass
+
 
 def uninitializePlugin(plugin_mobject):
     fn = ompx.MFnPlugin(plugin_mobject)
