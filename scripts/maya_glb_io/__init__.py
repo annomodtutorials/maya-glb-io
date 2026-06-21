@@ -4,4 +4,4 @@ Plug-in entry point lives in ../../plug-ins/maya_glb_io.py.
 This package holds the actual implementation.
 """
 
-__version__ = "1.0.0"
+__version__ = "1.0.1"

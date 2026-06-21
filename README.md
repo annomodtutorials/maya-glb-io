@@ -4,7 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Maya 2022+](https://img.shields.io/badge/Maya-2022%2B-blue.svg)](https://www.autodesk.com/products/maya/)
-[![Version 1.0.0](https://img.shields.io/badge/version-1.0.0-orange.svg)](CHANGELOG.md)
+[![Version 1.0.1](https://img.shields.io/badge/version-1.0.1-orange.svg)](CHANGELOG.md)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
 Maya GLB I/O brings full glTF 2.0 in **both directions** to Maya — geometry, PBR materials,

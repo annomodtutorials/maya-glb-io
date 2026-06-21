@@ -17,7 +17,7 @@ import maya.mel as mel
 
 
 PLUGIN_NAME = "maya_glb_io"
-PLUGIN_VERSION = "1.0.0"
+PLUGIN_VERSION = "1.0.1"
 PLUGIN_VENDOR = "annomodtutorials"
 
 # Name of the MEL global proc Maya calls to build the File Specifics panel.

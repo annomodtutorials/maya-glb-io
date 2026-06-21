@@ -5,6 +5,19 @@ All notable changes to Maya GLB I/O are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to
 [Semantic Versioning](https://semver.org/).
 
+## [1.0.1] - 2026-06-22
+
+### Added
+- **In-plugin update check** — tells you inside Maya when a newer release is available
+  (automatic once per day on load, fail-silent offline), plus a
+  *GLB I/O → Check for Updates...* menu item.
+
+### Changed
+- Renamed the top menu to **GLB I/O**.
+- Plug-in now reports its correct version in the Plug-in Manager.
+- The landing page offers a direct one-click download of the release zip; install docs
+  point at the release installer.
+
 ## [1.0.0] - 2026-06-03
 
 First public release — a complete, free, MIT-licensed glTF 2.0 importer **and** exporter for
@@ -48,4 +61,5 @@ Autodesk Maya 2022+.
 - Import and Export Preferences windows; one-time Draco-decoder installer.
 - Drag-and-drop `install.py`, a Maya module `.mod`, and Plug-in Manager loading.
 
+[1.0.1]: https://github.com/annomodtutorials/maya-glb-io/releases/tag/v1.0.1
 [1.0.0]: https://github.com/annomodtutorials/maya-glb-io/releases/tag/v1.0.0
